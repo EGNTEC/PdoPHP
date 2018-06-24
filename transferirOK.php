@@ -4,14 +4,18 @@ if(isset($_POST['idr'])){
 
     $conn = new PDO('mysql:host=localhost;dbname=pdo','root','root');
 
-    $sql = "SELECT Count(*) From contas Where id=".$_POST['idd'];
-    $query =  $conn->query($sql);
+    $sql = "SELECT Count(*) From contas Where id = :destinatario";
+    $prepareQuery =  $conn->prepare($sql);
+    $prepareQuery->bindParam(":destinatario",$_POST['idd'],PDO::PARAM_INT);
+    $prepareQuery->execute();
 
-    if($query->fetchColumn() > 0){
-        $sql = "SELECT Count(*) From contas Where id=".$_POST['idr'];
-        $query =  $conn->query($sql);
+    if($prepareQuery->fetchColumn() > 0){
+        $sql = "SELECT Count(*) From contas Where id = :remetente";
+        $prepareQuery =  $conn->prepare($sql);
+        $prepareQuery->bindParam(":remetente",$_POST['idr'],PDO::PARAM_INT);
+        $prepareQuery->execute();
 
-        if($query->fetchColumn() > 0){
+        if($prepareQuery->fetchColumn() > 0){
             $sql = "SELECT saldo From contas Where id=".$_POST['idr'];
             
             foreach ($conn->query($sql) As $row) {
