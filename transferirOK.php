@@ -9,12 +9,12 @@ if(isset($_POST['idr'])){
     $query =  $conn->query($sql)->fetchAll();
 
     if(count($query) > 0){
-        $sql = "Select id From contas Where id".$_POST['idr'];
+        $sql = "Select id From contas Where id=".$_POST['idr'];
         $query =  $conn->query($sql)->fetchAll();
 
 
         if(count($query) > 0){
-            $sql = "Select saldo From contas Where id".$_POST['idr'];
+            $sql = "Select saldo From contas Where id=".$_POST['idr'];
             
             foreach ($conn->query($sql) As $row) {
                 if($row['saldo'] >= $_POST["valor"]){
