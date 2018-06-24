@@ -1,6 +1,6 @@
 <h1>Banco Inter</h1>
 <table width="100%" border="1">
-<tr><td>Id</td><td>Cliente</td><td>Saldo</td><td>Transferir</td></tr>
+<tr><td>Id</td><td>Cliente</td><td>Saldo</td><td>Transferir</td><td>Deletar</td></tr>
 <?php
 try{
     $conn = new PDO('mysql:host=localhost;dbname=pdo','root','root');
@@ -14,6 +14,7 @@ try{
         echo"<td>".$row['nome']."</td>";
         echo"<td>".$row['saldo']."</td>";
         echo"<td><a href='transferir.php?id=".$row['id']."'>Transferir Valores</a></td>";
+        echo"<td><a href='deletar.php?id=".$row['id']."'>X</a></td>";
         echo"</tr>";
 
     }
@@ -24,3 +25,4 @@ try{
 }
 ?>
 </table>
+<a href="novaConta.php">Nova Conta</a>
