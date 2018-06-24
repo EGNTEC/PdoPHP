@@ -16,26 +16,32 @@ if(isset($_POST['idr'])){
         $prepareQuery->execute();
 
         if($prepareQuery->fetchColumn() > 0){
-            $sql = "SELECT saldo From contas Where id=".$_POST['idr'];
-            
-            foreach ($conn->query($sql) As $row) {
+            $sql = "SELECT saldo From contas Where id= :remetente";
+            $prepareQuery =  $conn->prepare($sql);
+            $prepareQuery->bindParam(":remetente",$_POST['idr'],PDO::PARAM_INT);
+            $prepareQuery->execute();
+
+           if ($row = $prepareQuery->fetch(PDO::FETCH_ASSOC)) {
                 if($row['saldo'] >= $_POST["valor"]){
                     //retirar
-                    $updateRemetenteSQL = "UPDATE contas Set saldo = saldo - ".$_POST["valor"]." Where id =".$_POST['idr'];
-                    $updateRemetenteQuery = $conn->query($updateRemetenteSQL);
+                    $updateRemetenteSQL = "UPDATE contas Set saldo = saldo - :valor Where id = :remetente";
+                    $updateRemetentePrepareQuery->bindParam(":valor",$_POST['valor'],PDO::PARAM_STR);
+                    
+                    $updateRemetentePrepareQuery->bindParam(":remetente",$_POST['idr'],PDO::PARAM_INT);
+                    $updateRemetentePrepareQuery->execute();
                     
                     if($updateRemetenteQuery->rowCount() > 0){
 
                         //Adicionar
-                        $updateDestinatarioSQL = "UPDATE contas Set saldo = saldo + ".$_POST["valor"]." Where id =".$_POST['idd'];
-                        $updateDestinatarioQuery = $conn->query($updateDestinatarioSQL);
+                        $updateDestinatarioSQL = "UPDATE contas Set saldo = saldo + :valor Where id = :destinatario";
+                        $updateDestinatarioPrepareQuery->bindParam(":valor",$_POST['valor'],PDO::PARAM_STR);
+                        $updateDestinatarioPrepareQuery->bindParam(":destinatario",$_POST['idd'],PDO::PARAM_INT);
+                        $updateDestinatarioPrepareQuery->execute();
 
                         if($updateDestinatarioQuery->rowCount() > 0){
                             echo"Transferencia OK!";
                         }
                     }                    
-                }else{
-                    echo"Transferencia NAO OK!";
                 }
             }
         }
